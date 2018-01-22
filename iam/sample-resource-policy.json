@@ -1,0 +1,14 @@
+{
+"Version": "2012-10-17",
+  "Id": "S3-Account-Permissions",
+  "Statement": [{
+    "Sid": "1",
+    "Effect": "Allow",
+    "Principal": {"AWS": ["arn:aws:iam::798237036441:user/arun"]},
+    "Action": "s3:*",
+    "Resource": [
+      "arn:aws:s3:::techcovery.in",
+      "arn:aws:s3:::techcovery.in/*"
+    ]
+  }]
+}

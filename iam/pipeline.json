@@ -1,0 +1,89 @@
+{
+    "pipeline": {
+        "roleArn": "arn:aws:iam::798237036441:role/AWS-CodePipeline-Service", 
+        "stages": [
+            {
+                "name": "Source", 
+                "actions": [
+                    {
+                        "inputArtifacts": [], 
+                        "name": "Source", 
+                        "actionTypeId": {
+                            "category": "Source", 
+                            "owner": "AWS", 
+                            "version": "1", 
+                            "provider": "S3"
+                        }, 
+                        "outputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ], 
+                        "configuration": {
+                            "S3Bucket": "arunsourceforsampleapp", 
+                            "PollForSourceChanges": "true", 
+                            "S3ObjectKey": "aws-codepipeline-s3-aws-codedeploy_linux.zip"
+                        }, 
+                        "runOrder": 1
+                    }
+                ]
+            }, 
+            {
+                "name": "Staging", 
+                "actions": [
+                    {
+                        "inputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ], 
+                        "name": "DemoFleet", 
+                        "actionTypeId": {
+                            "category": "Deploy", 
+                            "owner": "AWS", 
+                            "version": "1", 
+                            "provider": "CodeDeploy"
+                        }, 
+                        "outputArtifacts": [], 
+                        "configuration": {
+                            "ApplicationName": "DemoApplication", 
+                            "DeploymentGroupName": "DemoFleet"
+                        }, 
+                        "runOrder": 1
+                    }
+                ]
+            }, 
+            {
+                "name": "Production", 
+                "actions": [
+                    {
+                        "inputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ], 
+                        "name": "Production", 
+                        "actionTypeId": {
+                            "category": "Deploy", 
+                            "owner": "AWS", 
+                            "version": "1", 
+                            "provider": "CodeDeploy"
+                        }, 
+                        "outputArtifacts": [], 
+                        "configuration": {
+                            "ApplicationName": "DemoApplication", 
+                            "DeploymentGroupName": "ProdDeploymentGroup"
+                        }, 
+                        "runOrder": 1
+                    }
+                ]
+            }
+        ], 
+        "artifactStore": {
+            "type": "S3", 
+            "location": "codepipeline-us-west-2-680328340065"
+        }, 
+        "name": "testpipeline", 
+        "version": 2
+    }
+}
