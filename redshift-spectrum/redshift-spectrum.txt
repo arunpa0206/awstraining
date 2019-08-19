@@ -1,0 +1,42 @@
+create external schema spectrum
+from data catalog
+database 'spectrumdb'
+iam_role '<Arn number of your iam role>'
+create external database if not exists;
+
+create external table spectrum.sales(
+salesid integer,
+listid integer,
+sellerid integer,
+buyerid integer,
+eventid integer,
+dateid smallint,
+qtysold smallint,
+pricepaid decimal(8,2),
+commission decimal(8,2),
+saletime timestamp)
+row format delimited
+fields terminated by '\t'
+stored as textfile
+location 's3://redshiftexample2/tickit/spectrum/sales/'
+table properties ('numRows'='172000');
+
+select count(*) from spectrum.sales;
+
+create table event1(
+eventid integer not null distkey,
+venueid smallint not null,
+catid smallint not null,
+dateid smallint not null sortkey,
+eventname varchar(200),
+starttime timestamp);
+
+copy event1 from 's3://awssampledbuswest2/tickit/allevents_pipe.txt'
+iam_role '<Arn number of your iam role>'
+delimiter '|' timeformat 'YYYY-MM-DD HH:MI:SS' region 'us-west-2';
+
+select top 10 spectrum.sales.eventid, sum(spectrum.sales.pricepaid) from spectrum.sales, event1
+where spectrum.sales.eventid = event1.eventid
+and spectrum.sales.pricepaid > 30
+group by spectrum.sales.eventid
+order by 2 desc;

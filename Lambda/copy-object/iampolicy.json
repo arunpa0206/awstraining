@@ -1,0 +1,34 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListSourceAndDestinationBuckets",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:ListBucketVersions"
+            ],
+            "Resource": [
+                "Your source Bucket ARN/* ",
+                "Your Destination Bucket ARN/* "
+            ]
+        },
+        {
+            "Sid": "SourceBucketGetObjectAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "aYour source Bucket ARN /*"
+        },
+        {
+            "Sid": "DestinationBucketPutObjectAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject"
+            ],
+            "Resource": "Your Destination Bucket ARN/*"
+        }
+    ]
+ }

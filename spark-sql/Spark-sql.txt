@@ -1,0 +1,27 @@
+CREATE EXTERNAL TABLE trades_sample
+        (trading_date_time TIMESTAMP,
+         network CHAR(1),
+         message_category CHAR(1),
+         message_type CHAR(1),
+         message_sequence BIGINT,
+         market_exchange CHAR(1),
+         symbol VARCHAR(10),
+         trade_price DOUBLE,
+         trade_size BIGINT,
+         trade_conditions VARCHAR(6),
+         trade_conditions2 VARCHAR(6) )
+     ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+     LOCATION 's3://marketdatabucket/data/';
+
+DESCRIBE trades_sample;
+
+SELECT symbol, trade_price, trade_size
+FROM   trades_sample
+WHERE  HOUR(trading_date_time) = 9
+  AND  MINUTE(trading_date_time) = 30;
+
+SELECT symbol, SUM(trade_size) AS total_volume
+FROM   trades_sample
+WHERE  HOUR(trading_date_time) < 12
+GROUP BY symbol
+ORDER BY symbol;

@@ -1,0 +1,85 @@
+
+wget https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/samples/features.zip
+ 
+
+
+unzip features.zip
+
+
+CREATE TABLE hive_features 
+    (feature_id             BIGINT,
+    feature_name            STRING ,
+    feature_class           STRING ,
+    state_alpha             STRING,
+    prim_lat_dec            DOUBLE ,
+    prim_long_dec           DOUBLE ,
+    elev_in_ft              BIGINT)
+    ROW FORMAT DELIMITED 
+    FIELDS TERMINATED BY '|'
+    LINES TERMINATED BY '\n';
+    
+
+LOAD DATA 
+LOCAL 
+INPATH './features.txt' 
+OVERWRITE 
+INTO TABLE hive_features;
+
+
+SELECT state_alpha, COUNT(*) 
+FROM hive_features 
+GROUP BY state_alpha;
+
+
+CREATE EXTERNAL TABLE ddb_features1
+    (feature_id   BIGINT,
+    feature_name  STRING,
+    feature_class STRING,
+    state_alpha   STRING,
+    prim_lat_dec  DOUBLE,
+    prim_long_dec DOUBLE,
+    elev_in_ft    BIGINT)
+STORED BY 'org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler'
+TBLPROPERTIES(
+    "dynamodb.table.name" = "Features1",
+    "dynamodb.column.mapping"="feature_id:Id,feature_name:Name,feature_class:Class,state_alpha:State,prim_lat_dec:Latitude,prim_long_dec:Longitude,elev_in_ft:Elevation"
+);
+
+
+INSERT OVERWRITE TABLE ddb_features 
+SELECT 
+    feature_id, 
+    feature_name,
+    feature_class,
+    state_alpha,
+    prim_lat_dec,
+    prim_long_dec,
+    elev_in_ft
+FROM hive_features;
+
+
+SELECT DISTINCT feature_class
+FROM ddb_features1
+ORDER BY feature_class;
+
+
+SELECT feature_name, state_alpha 
+FROM ddb_features 
+WHERE feature_class = 'Lake'
+AND feature_name LIKE 'M%'
+ORDER BY feature_name;
+
+
+SELECT state_alpha, feature_class, COUNT(*) 
+FROM ddb_features
+WHERE elev_in_ft > 5280
+GROUP by state_alpha, feature_class
+HAVING COUNT(*) >= 3
+ORDER BY state_alpha, feature_class;
+
+                    
+
+
+
+ 
+ 
