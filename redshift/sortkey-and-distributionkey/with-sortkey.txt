@@ -76,23 +76,23 @@ CREATE TABLE lineorder (
 );
 
 copy part from 's3://redshiftexample2/part-csv.tbl-002'
-credentials 'aws_access_key_id=AKIAWSDKJFVQU64O25VK;aws_secret_access_key=usKF3ABH5w6XOvk2egmXrwEwPpfpuuKPzIaHX0Wd'
+credentials 'aws_access_key_id=<your access key>;aws_secret_access_key=<your sceret key>'
 csv;
 
 copy customer from 's3://awssampledbuswest2/ssbgz/customer'
-credentials 'aws_access_key_id= AKIAWSDKJFVQU64O25VK;aws_secret_access_key=usKF3ABH5w6XOvk2egmXrwEwPpfpuuKPzIaHX0Wd'
+credentials 'aws_access_key_id= <your access key>;aws_secret_access_key=<your sceret key'
 gzip compupdate off region 'us-west-2';
 
 copy supplier from 's3://awssampledbuswest2/ssbgz/supplier'
-credentials 'aws_access_key_id=AKIAWSDKJFVQU64O25VK;aws_secret_access_key=usKF3ABH5w6XOvk2egmXrwEwPpfpuuKPzIaHX0Wd'
+credentials 'aws_access_key_id=<your access key >;aws_secret_access_key=<Your sceret key'
 gzip compupdate off region 'us-west-2';
 
 copy lineorder from 's3://awssampledbuswest2/ssbgz/lineorder'
-credentials 'aws_access_key_id= AKIAWSDKJFVQU64O25VK;aws_secret_access_key=usKF3ABH5w6XOvk2egmXrwEwPpfpuuKPzIaHX0Wd'
+credentials 'aws_access_key_id= <Your access key>;aws_secret_access_key=<your sceret key>'
 gzip compupdate off region 'us-west-2';
 
 copy dwdate from 's3://awssampledbuswest2/ssbgz/dwdate'
-credentials 'aws_access_key_id= AKIAWSDKJFVQU64O25VK;aws_secret_access_key=usKF3ABH5w6XOvk2egmXrwEwPpfpuuKPzIaHX0Wd'
+credentials 'aws_access_key_id= <your access key>;aws_secret_access_key=<your sceret key'
 gzip compupdate off region 'us-west-2';
 
 select stv_tbl_perm.name as table, count(*) as mb
